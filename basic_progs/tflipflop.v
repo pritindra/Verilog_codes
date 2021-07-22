@@ -21,4 +21,14 @@ module DFF(din,clk,reset,q);
     end
 endmodule
 
-//module TFF_b();
+module TFF_b(clk, reset, t, q);
+    input clk, reset, t;
+    output reg q;
+    always@(posedge clk) 
+    begin
+        if (!reset)
+            q <= 0;
+        else
+            q <= q;
+    end
+endmodule
