@@ -6,17 +6,17 @@ module RSlatch(reset, set, q , q_bar);
     
     wire w1,w2;
 
-    nor #(1) n1(q ,reset, w2);
-    nor #(1) n2(q_bar ,set, w1);
+    nor #(1) n1(q ,reset, q_bar);
+    nor #(1) n2(q_bar ,set, q);
 
 endmodule
 
 
 module stimulus;
-    reg R, S;
+    reg A, B;
     wire Q, Q_bar;
 
-    RSlatch RS1(R, S, Q, Q_bar);
+    RSlatch RS1(A, B, Q, Q_bar);
 
     initial
     begin
