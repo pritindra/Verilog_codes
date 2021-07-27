@@ -8,11 +8,11 @@
 `define Y2RDELAY 3
 `define R2GDELAY 2
 
-module sig_control(hwy, cntry, clock, clear);
+module sig_control(hwy, cntry, X, clock, clear);
     output [1:0] hwy, cntry;
     reg [1:0] hwy, cntry;
     
-    input x;
+    input X;
     input clock, clear;
 
     parameter RED = 2'd0,
@@ -61,7 +61,7 @@ module sig_control(hwy, cntry, clock, clear);
                 else
                     next_state = S0;
             S1: begin
-                repeat(`Y2RDELAY) @(postedge clock);
+                repeat(`Y2RDELAY) @(posedge clock);
                     next_state = S2;
                 end
             S2: begin 
@@ -81,4 +81,46 @@ module sig_control(hwy, cntry, clock, clear);
         endcase
     end
 
+endmodule
+
+module stimulus;
+
+    wire [1:0] MAIN_SIG, CNTRY_SIG;
+    reg CLOCK, CLEAR;
+    reg CAR_ON_CNTRY_RD;
+    
+    sig_control SC(MAIN_SIG, CNTRY_SIG, CAR_ON_CNTRY_RD, CLOCK, CLEAR);        
+
+    initial
+        $monitor($time, " Main SIg = %b Country sig = %b car on cntry = %b", MAIN_SIG, CNTRY_SIG, CAR_ON_CNTRY_RD);
+
+    initial
+    begin
+        CLOCK = `FALSE;
+        forever #5 CLOCK = ~CLOCK;
+    end
+
+    initial
+    begin
+        CLEAR = `TRUE;
+        repeat (5) @(negedge CLOCK);
+            CLEAR = `FALSE;
+
+    end
+
+    initial
+    begin
+        CAR_ON_CNTRY_RD = `FALSE;
+        repeat(20)@(negedge CLOCK); CAR_ON_CNTRY_RD = `TRUE;
+        repeat(10)@(negedge CLOCK); CAR_ON_CNTRY_RD = `FALSE;
+
+        repeat(20)@(negedge CLOCK); CAR_ON_CNTRY_RD = `TRUE;
+        repeat(10)@(negedge CLOCK); CAR_ON_CNTRY_RD = `FALSE;
+        
+        repeat(20)@(negedge CLOCK); CAR_ON_CNTRY_RD = `TRUE;
+        repeat(10)@(negedge CLOCK); CAR_ON_CNTRY_RD = `FALSE;
+
+        repeat (10)@(negedge CLOCK); $stop;
+
+    end
 endmodule
