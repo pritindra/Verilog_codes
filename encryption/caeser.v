@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+// simple caeser encryption in a string
 
 module caeser (clk, reset_n, data_e, valid_e, key, data_d, valid_d);
 
@@ -17,13 +17,13 @@ module caeser (clk, reset_n, data_e, valid_e, key, data_d, valid_d);
     begin
         if (reset_n)
         begin
-            valid_d = valid_e;
-            data_d = (valid_e) ? data_e - key : 0;
+            valid_d <= valid_e;
+            data_d <= (valid_e) ? data_e - key : 0;
         end
         if (!reset_n)
         begin
-            valid_d = 0;
-            valid_d = 0;
+            valid_d <= 0;
+            valid_d <= 0;
         end
 
     end
@@ -49,9 +49,10 @@ module stimulus;
     begin
         rst_n = 1'b1;
         val_e = 1'b1;
-        data_i = "Apple";
+        data_i = 8'd5;
         key = 8'd3;
-
-        #1 $display("data ouput= %h", data_o);
+        
+        #10 $display("data ouput= %h", data_o);
     end
+    initial #30 $finish;
 endmodule
