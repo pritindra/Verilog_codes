@@ -29,4 +29,10 @@ module stimulus;
         A= 1'b1; B= 1'b1;
         #1 $display("A= %b, B= %b, Q= %b, Q_bar= %b\n",A,B,Q,Q_bar);
     end
+
+    initial 
+    begin
+        $dumpfile("test.vcd");
+        $dumpvars(0,stimulus);
+    end
 endmodule
